@@ -1,0 +1,27 @@
+= Zone
+
+Find the equivalent date and time of the given time in your local zone.
+
+[source,bash]
+----
+$ git clone https://github.com/ozlerhakan/zone.git
+$ cd zone/
+$ mvn clean install
+$ java -jar target/zone.jar --help
+Usage: zone [options]
+
+Options:
+  --help              Show this help
+  --hour,-h hour      Add hour e.g. 2,3,4
+  --local,-l local    Override the local time zone, default is GMT+3
+  --period,-p period  Add the period of the specified hour, i.e. AM or PM
+  --zone,-z zone      Add time zone to which the hour and period belong, e.g. CET
+----
+
+Assume that your current date and time is 2017-01-27 09:00 AM and the time zone is GMT+3. You have a meeting with your friend living in Singapore, at 3 PM GMT+8. To find out what this means in your current time is:
+
+[source, bash]
+----
+$ java -jar target/zone.jar -h 3 -z GMT+8 -p PM
+In your local time: (2017-01-27 03:00 PM) is (2017-01-27 10:00 AM)
+----

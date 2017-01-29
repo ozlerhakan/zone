@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 import java.util.TimeZone;
 
 /**
@@ -28,6 +29,21 @@ public class Zone {
             System.exit(0);
         }
 
+        if (Objects.isNull(config.getHour())) {
+            cp.usage();
+            System.exit(0);
+        }
+
+        if (Objects.isNull(config.getTime())) {
+            cp.usage();
+            System.exit(0);
+        }
+
+        if (Objects.isNull(config.getZone())) {
+            cp.usage();
+            System.exit(0);
+        }
+
         try {
             Zone zone = new Zone(config);
             zone.find();
@@ -38,7 +54,7 @@ public class Zone {
 
     }
 
-    private void printResult(DateTimeFormatter date12Format, LocalDateTime targetTime, LocalDateTime localDateTime) {
+    private void printResult(LocalDateTime targetTime, LocalDateTime localDateTime) {
         System.out.print("In your local time: ");
         System.out.print("(" + targetTime.format(date12Format) + ")");
         System.out.print(" is ");
@@ -51,17 +67,20 @@ public class Zone {
 
     public void find() {
         int hour = Integer.parseInt(config.getHour());
-        if (config.getTime().toLowerCase().equals("PM".toLowerCase())) hour += 12;
+        if (config.getTime().equalsIgnoreCase("PM")) {
+            hour += 12;
+            if (hour == 24) hour = 0;
+        }
 
         LocalDateTime targetTime = LocalDateTime.now();
         targetTime = LocalDateTime.of(targetTime.getYear(), targetTime.getMonth(), targetTime.getDayOfMonth(), hour, 0);
 
         final ZonedDateTime zdt = targetTime.atZone(ZoneId.of(config.getZone()));
         //-Duser.timezone=GMT+3
-        String zoneStr = config.getLocalZone() == null || config.getLocalZone().equals("") ? "GMT+3" : config.getLocalZone();
+        String zoneStr = config.getLocalZone() == null ? "GMT+3" : config.getLocalZone();
         final TimeZone zone = TimeZone.getTimeZone(zoneStr);
         LocalDateTime localDateTime = zdt.withZoneSameInstant(zone.toZoneId()).toLocalDateTime();
 
-        printResult(date12Format, targetTime, localDateTime);
+        printResult(targetTime, localDateTime);
     }
 }

@@ -12,7 +12,7 @@ public class Config {
     private boolean help;
 
     @CmdOption(names = {"--hour", "-h"}, args = {"hour"}, description = "Add hour e.g. 2,3,4")
-    private String h;
+    private String hour;
 
     @CmdOption(names = {"--period", "-p"}, args = {"period"}, description = "Add the period of the specified hour, i.e. AM or PM")
     private String time;
@@ -24,7 +24,7 @@ public class Config {
     private String localZone;
 
     public String getHour() {
-        return h;
+        return hour;
     }
 
     public boolean isHelp() {
